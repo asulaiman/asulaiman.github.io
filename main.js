@@ -9568,29 +9568,27 @@ var Map = exports.Map = function (_Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
 
-            // new OlMap({
-            //     target: 'map',
-            //     layers: [
-            //         new TileLayer({
-            //             source: new XYZ({
-            //                 url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-            //             })
-            //         })
-            //     ],
-            //     view: new View({
-            //         center: [0, 0],
-            //         zoom: 2
-            //     })
-            // });
-
-            // Once the Google Maps API has finished loading, initialize the map
-            this.getGoogleMaps().then(function (google) {
-                var uluru = { lat: -25.363, lng: 131.044 };
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 4,
-                    center: uluru
-                });
+            new _Map2.default({
+                target: 'map',
+                layers: [new _Tile2.default({
+                    source: new _XYZ2.default({
+                        url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    })
+                })],
+                view: new _View2.default({
+                    center: [0, 0],
+                    zoom: 2
+                })
             });
+
+            // // Once the Google Maps API has finished loading, initialize the map
+            // this.getGoogleMaps().then((google) => {
+            //     const uluru = {lat: -25.363, lng: 131.044};
+            //     const map = new google.maps.Map(document.getElementById('map'), {
+            //         zoom: 4,
+            //         center: uluru
+            //     });
+            // });
         }
     }, {
         key: 'getGoogleMaps',
@@ -9609,7 +9607,7 @@ var Map = exports.Map = function (_Component) {
 
                     // Load the Google Maps API
                     var script = document.createElement("script");
-                    script.src = 'http://maps.googleapis.com/maps/api/js?key=AIzaSyBogpv5yOUORkQJoTLrtbARcgR4DYolAl8&callback=resolveGoogleMapsPromise';
+                    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBogpv5yOUORkQJoTLrtbARcgR4DYolAl8&callback=resolveGoogleMapsPromise';
                     script.async = true;
                     document.body.appendChild(script);
                 });
@@ -9621,7 +9619,7 @@ var Map = exports.Map = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement('div', { id: 'map' });
+            return _react2.default.createElement('div', { id: 'map', style: { width: 400, height: 300 } });
         }
     }]);
 
