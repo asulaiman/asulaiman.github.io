@@ -7301,6 +7301,12 @@ var Home = function (_Component) {
                     location.href
                 ),
                 _react2.default.createElement('br', null),
+                _react2.default.createElement(
+                    'button',
+                    { onClick: this.openModal },
+                    'Open Modal'
+                ),
+                _react2.default.createElement('br', null),
                 _react2.default.createElement(_components.Dog, { preloadDog: qs.loadDog }),
                 _react2.default.createElement('br', null),
                 this.state.geoLocation && _react2.default.createElement(
@@ -7312,7 +7318,8 @@ var Home = function (_Component) {
                     this.state.geoLocation.lng
                 ),
                 _react2.default.createElement(_components.Map, { lat: this.state.geoLocation && this.state.geoLocation.lat, lng: this.state.geoLocation && this.state.geoLocation.lng }),
-                _react2.default.createElement(_components.LightningMessenger, null)
+                _react2.default.createElement(_components.LightningMessenger, null),
+                _react2.default.createElement(_components.TestModal, { isModalOpen: this.state.isModalOpen, closeModal: this.closeModal })
             );
         }
     }]);
@@ -7337,15 +7344,6 @@ var App = function App() {
                         _reactRouterDom.Link,
                         { to: '/home' },
                         'Home'
-                    )
-                ),
-                _react2.default.createElement(
-                    'li',
-                    null,
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: '/modal' },
-                        'Modal'
                     )
                 )
             ),
@@ -58640,7 +58638,7 @@ var TestModal = exports.TestModal = function (_Component) {
                 _react2.default.createElement(
                     _reactModal2.default,
                     {
-                        isOpen: true,
+                        isOpen: this.props.isModalOpen,
                         onRequestClose: this.props.closeModal,
                         contentLabel: 'Example Modal',
                         style: customStyles
