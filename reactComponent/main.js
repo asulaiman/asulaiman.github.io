@@ -7249,7 +7249,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
-_reactModal2.default.setAppElement('body');
+_reactModal2.default.setAppElement(document.getElementById('root'));
 
 var Home = function (_Component) {
     _inherits(Home, _Component);
@@ -7260,11 +7260,8 @@ var Home = function (_Component) {
         var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
         _this.state = {
-            isModalOpen: false,
             geoLocation: null
         };
-        _this.openModal = _this.openModal.bind(_this);
-        _this.closeModal = _this.closeModal.bind(_this);
         return _this;
     }
 
@@ -7293,7 +7290,7 @@ var Home = function (_Component) {
             var qs = _queryString2.default.parse(_queryString2.default.extract(location.hash));
             return _react2.default.createElement(
                 'div',
-                null,
+                { id: 'root' },
                 _react2.default.createElement(
                     'h1',
                     null,
@@ -7301,11 +7298,7 @@ var Home = function (_Component) {
                     location.href
                 ),
                 _react2.default.createElement('br', null),
-                _react2.default.createElement(
-                    'button',
-                    { onClick: this.openModal },
-                    'Open Modal'
-                ),
+                _react2.default.createElement(_components.TestModal, null),
                 _react2.default.createElement('br', null),
                 _react2.default.createElement(_components.Dog, { preloadDog: qs.loadDog }),
                 _react2.default.createElement('br', null),
@@ -7318,8 +7311,7 @@ var Home = function (_Component) {
                     this.state.geoLocation.lng
                 ),
                 _react2.default.createElement(_components.Map, { lat: this.state.geoLocation && this.state.geoLocation.lat, lng: this.state.geoLocation && this.state.geoLocation.lng }),
-                _react2.default.createElement(_components.LightningMessenger, null),
-                _react2.default.createElement(_components.TestModal, { isModalOpen: this.state.isModalOpen, closeModal: this.closeModal })
+                _react2.default.createElement(_components.LightningMessenger, null)
             );
         }
     }]);
@@ -58613,8 +58605,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var customStyles = {
-    overlay: {
-        'zIndex': '11'
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
     }
 };
 
@@ -58624,65 +58621,391 @@ var TestModal = exports.TestModal = function (_Component) {
     function TestModal(props) {
         _classCallCheck(this, TestModal);
 
-        return _possibleConstructorReturn(this, (TestModal.__proto__ || Object.getPrototypeOf(TestModal)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (TestModal.__proto__ || Object.getPrototypeOf(TestModal)).call(this, props));
+
+        _this.state = {
+            isModalOpen: false
+        };
+        _this.openModal = _this.openModal.bind(_this);
+        _this.closeModal = _this.closeModal.bind(_this);
+        return _this;
     }
 
     _createClass(TestModal, [{
-        key: 'render',
-        value: function render() {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
             var _this2 = this;
 
+            navigator.geolocation.getCurrentPosition(function (position) {
+                _this2.setState({ geoLocation: { lat: position.coords.latitude, lng: position.coords.longitude } });
+            });
+        }
+    }, {
+        key: 'openModal',
+        value: function openModal() {
+            this.setState({ isModalOpen: true });
+        }
+    }, {
+        key: 'closeModal',
+        value: function closeModal() {
+            this.setState({ isModalOpen: false });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(
+                    'button',
+                    { onClick: this.openModal },
+                    'Open Modal'
+                ),
+                _react2.default.createElement(
                     _reactModal2.default,
                     {
-                        isOpen: this.props.isModalOpen,
-                        onRequestClose: this.props.closeModal,
+                        isOpen: this.state.isModalOpen,
+                        onRequestClose: this.closeModal,
                         contentLabel: 'Example Modal',
                         style: customStyles
                     },
                     _react2.default.createElement(
-                        'h2',
-                        { ref: function ref(subtitle) {
-                                return _this2.subtitle = subtitle;
-                            } },
-                        'Hello'
-                    ),
-                    _react2.default.createElement(
-                        'button',
-                        { onClick: this.props.closeModal },
-                        'close'
-                    ),
-                    _react2.default.createElement(
                         'div',
-                        null,
-                        'I am a modal'
-                    ),
-                    _react2.default.createElement(
-                        'form',
-                        null,
-                        _react2.default.createElement('input', null),
+                        { 'data-aura-rendered-by': '808:0', 'data-aura-class': 'cDHS_Lab_ProviderSearchRequestAppointment' },
                         _react2.default.createElement(
-                            'button',
-                            null,
-                            'tab navigation'
+                            'div',
+                            { 'data-aura-rendered-by': '809:0' },
+                            _react2.default.createElement(
+                                'button',
+                                { onClick: this.closeModal },
+                                'close'
+                            )
+                        ),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement(
+                            'div',
+                            { 'data-aura-rendered-by': '809:0' },
+                            _react2.default.createElement(
+                                'span',
+                                { 'data-aura-rendered-by': '814:0' },
+                                'Request an appointment'
+                            )
                         ),
                         _react2.default.createElement(
-                            'button',
-                            null,
-                            'stays'
+                            'div',
+                            { 'data-aura-rendered-by': '816:0' },
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '817:0' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '818:0' },
+                                    _react2.default.createElement(
+                                        'p',
+                                        { 'data-aura-rendered-by': '819:0' },
+                                        _react2.default.createElement(
+                                            'strong',
+                                            { 'data-aura-rendered-by': '820:0' },
+                                            'Provider'
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { 'data-aura-rendered-by': '822:0' },
+                                        'Daniel Diamond'
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { 'data-aura-rendered-by': '1:2243;a' },
+                                        'Dental General Practitioner'
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '827:0' },
+                                    _react2.default.createElement(
+                                        'p',
+                                        { 'data-aura-rendered-by': '828:0' },
+                                        _react2.default.createElement(
+                                            'strong',
+                                            { 'data-aura-rendered-by': '829:0' },
+                                            'Address'
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        { 'data-aura-rendered-by': '831:0' },
+                                        'A1-1801 Rutherford Rd',
+                                        _react2.default.createElement('br', { 'data-aura-rendered-by': '833:0' }),
+                                        'Concord',
+                                        _react2.default.createElement('br', { 'data-aura-rendered-by': '835:0' }),
+                                        'L4K 5R7'
+                                    )
+                                )
+                            )
                         ),
                         _react2.default.createElement(
-                            'button',
-                            null,
-                            'inside'
-                        ),
-                        _react2.default.createElement(
-                            'button',
-                            null,
-                            'the modal'
+                            'div',
+                            { 'data-aura-rendered-by': '845:0' },
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '846:0' },
+                                _react2.default.createElement(
+                                    'span',
+                                    { 'data-aura-rendered-by': '847:0' },
+                                    _react2.default.createElement(
+                                        'strong',
+                                        { 'data-aura-rendered-by': '848:0' },
+                                        'Select your preferred appointment date (optional)'
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'p',
+                                    { 'data-aura-rendered-by': '850:0' },
+                                    'DD/MM/YYYY'
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '869:0' },
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '856:0' },
+                                        _react2.default.createElement(
+                                            'div',
+                                            null,
+                                            _react2.default.createElement('input', { maxlength: '2', type: 'text', placeholder: 'DD' })
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '861:0' },
+                                        _react2.default.createElement(
+                                            'div',
+                                            null,
+                                            _react2.default.createElement('input', { maxlength: '2', type: 'text', placeholder: 'MM' })
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '866:0' },
+                                        _react2.default.createElement(
+                                            'div',
+                                            null,
+                                            _react2.default.createElement('input', { maxlength: '4', type: 'text', placeholder: 'YYYY' })
+                                        )
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '871:0' },
+                                '\xA0'
+                            ),
+                            _react2.default.createElement(
+                                'p',
+                                { 'data-aura-rendered-by': '878:0' },
+                                _react2.default.createElement(
+                                    'span',
+                                    { 'data-aura-rendered-by': '879:0' },
+                                    _react2.default.createElement(
+                                        'strong',
+                                        { 'data-aura-rendered-by': '880:0' },
+                                        'Select time (optional)'
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'fieldset',
+                                null,
+                                _react2.default.createElement(
+                                    'div',
+                                    null,
+                                    _react2.default.createElement('input', { name: 'radioGroup', type: 'radio', value: 'morning' }),
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'radio-0-19' },
+                                        'Morning'
+                                    ),
+                                    _react2.default.createElement('input', { name: 'radioGroup', type: 'radio', value: 'afternoon' }),
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'radio-1-19' },
+                                        'Afternoon'
+                                    ),
+                                    _react2.default.createElement('input', { name: 'radioGroup', type: 'radio', value: 'evening' }),
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'radio-2-19' },
+                                        'Evening'
+                                    ),
+                                    _react2.default.createElement('input', { name: 'radioGroup', type: 'radio', value: 'anytime' }),
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'radio-3-19' },
+                                        'Anytime'
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '883:0' },
+                                _react2.default.createElement(
+                                    'p',
+                                    { 'data-aura-rendered-by': '884:0' },
+                                    _react2.default.createElement(
+                                        'strong',
+                                        { 'data-aura-rendered-by': '885:0' },
+                                        'Reason(s) for your visit. Please don\'t include sensitive personal information.'
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '889:0' },
+                                _react2.default.createElement(
+                                    'p',
+                                    { 'data-aura-rendered-by': '890:0' },
+                                    _react2.default.createElement(
+                                        'strong',
+                                        { 'data-aura-rendered-by': '891:0' },
+                                        'Your contact information'
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '893:0' },
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'input-21' },
+                                        'Name'
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement('input', { type: 'text' })
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '895:0' },
+                                        _react2.default.createElement(
+                                            'section',
+                                            { role: 'dialog', 'aria-labelledby': 'dialog-heading-id-1', 'data-aura-rendered-by': '896:0' },
+                                            _react2.default.createElement(
+                                                'header',
+                                                { 'data-aura-rendered-by': '897:0' },
+                                                _react2.default.createElement(
+                                                    'div',
+                                                    { 'data-aura-rendered-by': '898:0' },
+                                                    _react2.default.createElement(
+                                                        'div',
+                                                        { 'data-aura-rendered-by': '899:0' },
+                                                        _react2.default.createElement(
+                                                            'div',
+                                                            { title: 'Please enter your name.', 'data-aura-rendered-by': '900:0' },
+                                                            'Please enter your name.'
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '902:0' },
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'input-22' },
+                                        'Email'
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement('input', { type: 'text', placeholder: 'example@email.com' })
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '904:0' },
+                                        '\xA0'
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '911:0' },
+                                    _react2.default.createElement(
+                                        'label',
+                                        { 'for': 'input-23' },
+                                        'Phone'
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement('input', { type: 'text', placeholder: '5555555555' })
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '913:0' },
+                                        '\xA0'
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '920:0' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { 'data-aura-rendered-by': '921:0' },
+                                    _react2.default.createElement(
+                                        'div',
+                                        { 'data-aura-rendered-by': '922:0' },
+                                        _react2.default.createElement(
+                                            'h3',
+                                            { 'data-aura-rendered-by': '923:0' },
+                                            _react2.default.createElement(
+                                                'button',
+                                                { 'aria-expanded': 'false', 'data-aura-rendered-by': '924:0' },
+                                                _react2.default.createElement(
+                                                    'span',
+                                                    { 'data-aura-rendered-by': '927:0' },
+                                                    'Terms and conditions'
+                                                )
+                                            )
+                                        ),
+                                        _react2.default.createElement(
+                                            'div',
+                                            { 'aria-hidden': 'true', 'data-aura-rendered-by': '929:0' },
+                                            'This feature sends a request only. It does not confirm an appointment booking. Be sure to confirm your appointment with the provider directly. ',
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            ' Health providers are responsible for the accuracy of the information in their Extended Profile, including their email address for appointment requests. Inaccurate contact information in the Extended Profile may result in appointment requests not reaching the intended email address. Please contact the health provider if you do not receive a response to your request. ',
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            ' We will send you an email confirming that your request has been sent. if you do not wish to receive this email, Please leave the email address field blank in the appointment request form. ',
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            ' Appointment requests are sent to the health provider by email. For your protection, do not include sensitive personal financial or medical information in the free-text comments box. ',
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            _react2.default.createElement('br', { 'data-aura-rendered-by': '930:0' }),
+                                            ' Appointment request data will be captured and analysed by Sun Life Financial for the purpose of improving our websites\' performance and functionality, creating a better experience for our visitors, measuring the response to web marketing campaings and providing you with more relevant information based on your possible interests in Sun Life content, products and services.'
+                                        )
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { 'data-aura-rendered-by': '931:0' },
+                                _react2.default.createElement(
+                                    'button',
+                                    { title: 'Submit', type: 'button', 'data-aura-rendered-by': '934:0' },
+                                    'Submit'
+                                ),
+                                ' ',
+                                _react2.default.createElement(
+                                    'button',
+                                    { onClick: this.closeModal },
+                                    'close'
+                                )
+                            )
                         )
                     )
                 )
