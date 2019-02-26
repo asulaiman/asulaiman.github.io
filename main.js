@@ -105,8 +105,7 @@ var _App2 = _interopRequireDefault(_App);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(_App2.default);
-_reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.body);
+_reactDom2.default.render(_react2.default.createElement(_App2.default, { showGoogleMap: true }), document.body);
 
 /***/ }),
 /* 1 */
@@ -7238,7 +7237,7 @@ var _queryString2 = _interopRequireDefault(_queryString);
 
 var _components = __webpack_require__(73);
 
-__webpack_require__(279);
+__webpack_require__(280);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7298,6 +7297,7 @@ var Home = function (_Component) {
                     location.href
                 ),
                 _react2.default.createElement('br', null),
+                _react2.default.createElement('br', null),
                 _react2.default.createElement(_components.TestModal, null),
                 _react2.default.createElement('br', null),
                 _react2.default.createElement(_components.Dog, { preloadDog: qs.loadDog }),
@@ -7319,7 +7319,8 @@ var Home = function (_Component) {
     return Home;
 }(_react.Component);
 
-var App = function App() {
+var App = function App(_ref) {
+    var showGoogleMap = _ref.showGoogleMap;
     return _react2.default.createElement(
         _reactRouterDom.HashRouter,
         null,
@@ -7337,11 +7338,20 @@ var App = function App() {
                         { to: '/home' },
                         'Home'
                     )
+                ),
+                showGoogleMap && _react2.default.createElement(
+                    'li',
+                    null,
+                    _react2.default.createElement(
+                        _reactRouterDom.Link,
+                        { to: '/google-map' },
+                        'Google Map'
+                    )
                 )
             ),
             _react2.default.createElement('hr', null),
             _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/home', component: Home }),
-            _react2.default.createElement(_reactRouterDom.Route, { path: '/modal', component: _components.TestModal })
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/google-map', component: _components.GoogleMap })
         )
     );
 };
@@ -13894,7 +13904,19 @@ Object.keys(_map).forEach(function (key) {
   });
 });
 
-var _lightningMessenger = __webpack_require__(277);
+var _googleMap = __webpack_require__(277);
+
+Object.keys(_googleMap).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _googleMap[key];
+    }
+  });
+});
+
+var _lightningMessenger = __webpack_require__(278);
 
 Object.keys(_lightningMessenger).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -13906,7 +13928,7 @@ Object.keys(_lightningMessenger).forEach(function (key) {
   });
 });
 
-var _modal = __webpack_require__(278);
+var _modal = __webpack_require__(279);
 
 Object.keys(_modal).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
@@ -58526,6 +58548,94 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.GoogleMap = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var GoogleMap = exports.GoogleMap = function (_Component) {
+    _inherits(GoogleMap, _Component);
+
+    function GoogleMap(props) {
+        _classCallCheck(this, GoogleMap);
+
+        // Start Google Maps API loading since we know we'll soon need it
+        var _this = _possibleConstructorReturn(this, (GoogleMap.__proto__ || Object.getPrototypeOf(GoogleMap)).call(this, props));
+
+        _this.getGoogleMaps();
+        return _this;
+    }
+
+    _createClass(GoogleMap, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+
+            // Once the Google Maps API has finished loading, initialize the map
+            this.getGoogleMaps().then(function (google) {
+                var uluru = { lat: -25.363, lng: 131.044 };
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    center: uluru
+                });
+            });
+        }
+    }, {
+        key: 'getGoogleMaps',
+        value: function getGoogleMaps() {
+            // If we haven't already defined the promise, define it
+            if (!this.googleMapsPromise) {
+                this.googleMapsPromise = new Promise(function (resolve) {
+                    // Add a global handler for when the API finishes loading
+                    window.resolveGoogleMapsPromise = function () {
+                        // Resolve the promise
+                        resolve(google);
+
+                        // Tidy up
+                        delete window.resolveGoogleMapsPromise;
+                    };
+
+                    // Load the Google Maps API
+                    var script = document.createElement("script");
+                    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBogpv5yOUORkQJoTLrtbARcgR4DYolAl8&callback=resolveGoogleMapsPromise';
+                    script.async = true;
+                    document.body.appendChild(script);
+                });
+            }
+
+            // Return a promise for the Google Maps API
+            return this.googleMapsPromise;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement('div', { id: 'map', style: { width: 400, height: 300 } });
+        }
+    }]);
+
+    return GoogleMap;
+}(_react.Component);
+
+/***/ }),
+/* 278 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.LightningMessenger = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -58575,7 +58685,7 @@ var LightningMessenger = exports.LightningMessenger = function (_Component) {
 }(_react.Component);
 
 /***/ }),
-/* 278 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59017,11 +59127,11 @@ var TestModal = exports.TestModal = function (_Component) {
 }(_react.Component);
 
 /***/ }),
-/* 279 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(280);
+var content = __webpack_require__(281);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -59035,17 +59145,17 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(282)(content, options);
+var update = __webpack_require__(283)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
 if(false) {}
 
 /***/ }),
-/* 280 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(281)(false);
+exports = module.exports = __webpack_require__(282)(false);
 // imports
 
 
@@ -59056,7 +59166,7 @@ exports.push([module.i, "", ""]);
 
 
 /***/ }),
-/* 281 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59138,7 +59248,7 @@ function toComment(sourceMap) {
 }
 
 /***/ }),
-/* 282 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -59204,7 +59314,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(283);
+var	fixUrls = __webpack_require__(284);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -59524,7 +59634,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 283 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
